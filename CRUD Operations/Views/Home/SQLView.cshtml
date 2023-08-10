@@ -1,0 +1,50 @@
+﻿@using System.Data;
+@model DataTable
+
+<style>
+    .btn-add{
+        margin-top: 20px;
+    }
+</style>
+<table class="table">
+    <thead>
+        <tr>
+            <a class="btn btn-info btn-add" asp-controller="Home" asp-action="AddEdit">Add</a>
+        </tr>
+        <tr>
+            <th scope="col">Country ID</th>
+            <th scope="col">Country Name</th>
+            <th scope="col">Country Code</th>
+            <th scope="col">Created</th>
+            <th scope="col">Modified</th>
+            <th scope="col" colspan="2">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            foreach (DataRow dr in Model.Rows)
+            {
+                <tr>
+                    <td>@dr["CountryID"]</td>
+                    <td>@dr["CountryName"]</td>
+                    <td>@dr["CountryCode"]</td>
+                    <td>@dr["Created"]</td>
+                    <td>@dr["Modified"]</td>
+                    <td>
+                        <form method="post" asp-controller="Home" , asp-action="DeleteByID">
+                            <input type="hidden" name="CountryID" value="@int.Parse(@dr["CountryID"].ToString())">
+                            <input type="submit" value="Delete" class="btn btn-danger" />
+                        </form>
+                    </td>
+                    <td>
+                        <form method="post" asp-controller="Home" , asp-action="AddEdit">
+                            <input type="hidden" name="CountryID" value="@int.Parse(@dr["CountryID"].ToString())">
+                            <input type="submit" value="Edit" class="btn btn-success" />
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+        </tbody>
+
+</table>
