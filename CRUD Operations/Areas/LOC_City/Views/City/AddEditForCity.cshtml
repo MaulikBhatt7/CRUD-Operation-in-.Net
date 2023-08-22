@@ -1,0 +1,105 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    @using System.Data
+    @using CRUD_Operations.Areas.LOC_Country.Models
+    @using CRUD_Operations.Areas.LOC_State.Models
+    @model CityModel
+
+}
+
+
+<script>console.log("F")</script>
+<form method="post" asp-area="LOC_City" asp-controller="City" asp-action="CityAddEditMethod">
+    <table>
+        <tr>
+            <td>
+                City Name
+            </td>
+            <td>:</td>
+            <td>
+                <input type="text" value="@Model.CityName" asp-for="@Model.CityName" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                City Code
+            </td>
+            <td>:</td>
+            <td>
+                <input type="text" value="@Model.CityCode" asp-for="@Model.CityCode" />
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                Select Country
+            </td>
+            <td>:</td>
+            <td>
+                <select id="selectedCountry" asp-for="@Model.CountryID" onchange="funOnStateChange()">
+                    <option>Select Country</option>
+                    @foreach (CountryModel countryModel in ViewBag.countryList)
+                    {
+                        <option value="@countryModel.CountryID">@countryModel.CountryName</option>
+                    }
+                </select>
+            </td>
+        </tr>
+
+
+        <tr>
+            <td>
+                Select Country
+            </td>
+            <td>:</td>
+            <td>
+                <select id="selectedState" asp-for="@Model.StateID">
+                    <option>Select State</option>
+                </select>
+            </td>
+        </tr>
+
+        <tr>
+
+            <td>
+                <input type="hidden" name="CityID" value="@Model.CityID" />
+                <input type="submit" class="btn btn-primary" />
+            </td>
+        </tr>
+    </table>
+</form>
+
+@section Scripts {
+
+    <script>
+        function funOnStateChange() {
+            var CountryID = $("#selectedCountry").val();
+
+            $("#selectedState").empty();
+            $("#selectedState").append($("<option></option>").val("").html("Select State"));
+            if (CountryID !== "") {
+                $.ajax(
+                    {
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        url: "@Url.Action("StatesForComboBox","City")" + "?&CountryID=" + CountryID,
+                        data: {},
+                        dataType: "json",
+                        success: function (Result) {
+         
+                            $.each(Result, function (key, value) {
+                               
+                                $("#selectedState").append($("<option></option>").val(value.stateID).html(value.stateName));
+                            });
+                        },
+                        error: function (err) {
+                            alert("Error white fetch data");
+                        }
+
+                    }
+                )
+            }
+        }
+    </script>
+
+}
