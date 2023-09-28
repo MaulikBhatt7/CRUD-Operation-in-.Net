@@ -1,0 +1,84 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+@using System.Data;
+@model DataTable;
+
+<style>
+    .btn-add {
+        margin-top: 20px;
+    }
+
+    .text {
+        border: none;
+        background-color: white;
+        color: blue;
+    }
+</style>
+<div>
+    <input type="text" id="sample_1" placeholder="Search Branch" />
+    <button>Search</button>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <a class="btn btn-info btn-add" asp-area="Branch" asp-controller="Branch" asp-action="AddEditForBranch">Add</a>
+        </tr>
+        <tr>
+            <th scope="col">Branch ID</th>
+            <th scope="col">Branch Name</th>
+            <th scope="col">Branch Code</th>
+            <th scope="col">Created</th>
+            <th scope="col">Modified</th>
+            <th scope="col" colspan="2">Actions</th>
+        </tr>
+    </thead>
+    <tbody id="sample_2">
+
+        @foreach (DataRow dr in Model.Rows)
+        {
+            <tr>
+                <td>@dr["BranchID"]</td>
+                <td>
+                    <form method="post" asp-area="Branch" asp-controller="Branch" , asp-action="SelectByID">
+                        <input type="hidden" name="BranchyID" value="@int.Parse(@dr["BranchID"].ToString())">
+                        <input type="submit" value="@dr["BranchName"]" class="text" />
+                    </form>
+                </td>
+                <td>@dr["BranchCode"]</td>
+                <td>@dr["Created"]</td>
+                <td>@dr["Modified"]</td>
+                <td>
+                    <form method="post" asp-area="Branch" asp-controller="Branch" , asp-action="DeleteFromBranch">
+                        <input type="hidden" name="BranchID" value="@int.Parse(@dr["BranchID"].ToString())">
+                        <input type="submit" value="Delete" class="btn btn-danger" />
+                    </form>
+                </td>
+                <td>
+                    <form method="post" asp-area="Branch" asp-controller="Branch" , asp-action="AddEditForBranch">
+                        <input type="hidden" name="BranchID" value="@int.Parse(@dr["BranchID"].ToString())">
+                        <input type="submit" value="Edit" class="btn btn-success" />
+                    </form>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+
+</table>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $("#sample_1").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#sample_2 tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+}
+
+

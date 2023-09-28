@@ -1,0 +1,86 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using System.Data;
+@model DataTable;
+<style>
+    .btn-add {
+        margin-top: 20px;
+    }
+
+    .text {
+        border: none;
+        background-color: white;
+        color: blue;
+    }
+</style>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <a class="btn btn-info btn-add" asp-area="Student" asp-controller="Student" asp-action="AddEditForStudent">Add</a>
+        </tr>
+        <tr>
+            <th scope="col">Student ID</th>
+            <th scope="col">Student Name</th>
+            <th scope="col">Student Mobile No.</th>
+            <th scope="col">Student Email</th>
+            <th scope="col">Father's Mobile No.</th>
+            <th scope="col">Address</th>
+            <th scope="col">Birth Date</th>
+            <th scope="col">Age</th>
+            <th scope="col">IsActive</th>
+            <th scope="col">Gender</th>
+            <th scope="col">BranchName</th>
+            <th scope="col">CityName</th>
+            <th scope="col">Created</th>
+            <th scope="col">Modified</th>
+            <th scope="col" colspan="2">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            foreach (DataRow dr in Model.Rows)
+            {
+                <tr>
+                    <td>@dr["StudentID"]</td>
+                    <td>
+                        <form method="post" asp-area="LOC_City" asp-controller="City" , asp-action="CitySelectByID">
+                            <input type="hidden" name="StudentID" value="@int.Parse(@dr["StudentID"].ToString())">
+                            <input type="submit" value="@dr["StudentName"]" class="text" />
+                        </form>
+                    </td>
+                    <td>@dr["MobileNoStudent"]</td>
+                    <td>@dr["Email"]</td>
+                    <td>@dr["MobileNoFather"]</td>
+                    <td>@dr["Address"]</td>
+                    <td>@Convert.ToDateTime(dr["BirthDate"]).ToString("d")</td>
+                    <td>@dr["Age"]</td>
+                    <td>@dr["IsActive"]</td>
+                    <td>@dr["Gender"]</td>
+                    <td>@dr["BranchName"]</td>
+                    <td>@dr["CityName"]</td>
+                   
+                    <td>@Convert.ToDateTime(dr["Created"]).ToString("d")</td>
+                    <td>@Convert.ToDateTime(dr["Modified"]).ToString("d")</td>
+                    <td>
+                        <form method="post" asp-area="Student" asp-controller="Student" asp-action="DeleteFromStudent">
+                            <input type="hidden" name="StudentID" value="@int.Parse(@dr["StudentID"].ToString())">
+                            <input type="submit" value="Delete" class="btn btn-danger" />
+                        </form>
+                    </td>
+                    <td>
+                        <form method="post" asp-area="Student" asp-controller="Student" asp-action="AddEditForStudent">
+                            <input type="hidden" name="StudentID" value="@int.Parse(@dr["StudentID"].ToString())">
+                            <input type="submit" value="Edit" class="btn btn-success" />
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+
+</table>
+
